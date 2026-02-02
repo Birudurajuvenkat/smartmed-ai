@@ -1,68 +1,76 @@
-# SmartMed AI 🩺
+# SmartMed AI – Multilingual Medical Report Analyzer
 
-SmartMed AI is an intelligent medical report analyzer application built with Streamlit. It helps users make sense of their lab reports by extracting data, analyzing results against standard reference ranges, and providing personalized lifestyle recommendations.
+## Project Overview
 
-## 🌟 Features
+- SmartMed AI is an AI-powered web application developed to analyze medical reports and generate simplified, patient-friendly summaries.
+- The system is designed to be free, easy to use, and accessible without user login.
+- It supports multiple languages including English, Telugu, Hindi, and Tamil.
+- The application focuses on improving healthcare awareness using artificial intelligence technologies.
 
-*   **Document Parsing**:
-    *   **OCR Integration**: Extracts text from images (JPG, PNG) using Tesseract OCR.
-    *   **PDF Support**: Extracts text from native PDF medical reports.
-*   **Intelligent Analysis**:
-    *   **Validator**: Validates if the uploaded document is a medical report.
-    *   **NLP Engine**: Structured extraction of test names, values, units, and ranges using Regex and Pattern Matching.
-    *   **Analyzer**: Compares results against lab-provided ranges (if found) or internal standard medical ranges.
-*   **Personalization**:
-    *   **Recommender System**: Provides food and lifestyle suggestions for abnormal results (High/Low).
-    *   **Multi-language Support**: Interface and results available in English, Hindi, Telugu, and Tamil.
-*   **User Feedback**: Collects anonymous user feedback to improve the system.
+## Key Features
 
-## 🚀 Deployment
+- Supports upload of medical reports in PDF and image formats.
+- Uses Optical Character Recognition (OCR) with Tesseract to extract text from scanned documents.
+- Implements Natural Language Processing (NLP) for text preprocessing and medical entity extraction.
+- Automatically identifies medical parameters such as Hemoglobin, Blood Sugar, and Cholesterol.
+- Classifies health values into Low, Normal, and High categories using reference ranges.
+- Generates personalized diet and lifestyle recommendations.
+- Includes document validation to prevent non-medical and irrelevant file uploads.
+- Provides multilingual output through translation mechanisms.
+- Offers a clean and user-friendly web interface built with Streamlit.
+- Allows anonymous feedback submission without collecting personal data.
 
-This project is ready for deployment on **Streamlit Cloud** or **Docker**.
+## System Workflow
 
-👉 **[Read the Deployment Guide](DEPLOYMENT.md)** for step-by-step instructions.
+- User uploads a medical report through the web interface.
+- The system validates the uploaded file format and content.
+- OCR is applied to extract text from scanned documents.
+- Extracted text is cleaned and processed using NLP techniques.
+- Medical values and parameters are identified and structured.
+- Values are analyzed and compared with standard reference ranges.
+- Health status is classified into appropriate categories.
+- Recommendations are generated based on analysis.
+- Results are displayed in real time.
+- Uploaded files are deleted automatically after processing.
 
-## 🛠️ Project Structure
+## Technologies Used
 
-*   `app.py`: Main Streamlit application entry point.
-*   `modules/`:
-    *   `ocr.py`: Image text extraction.
-    *   `pdf_processor.py`: PDF text extraction.
-    *   `nlp_processor.py`: Medical data parsing logic.
-    *   `analyzer.py`: Logic to interpret results (Low/Normal/High).
-    *   `recommender.py`: Rule-based recommendation engine.
-    *   `validator.py`: Document validation logic.
-    *   `translator.py`: Translation services.
-*   `utils/`: Helper functions for file handling and feedback.
-*   `uploads/`: Temporary storage for uploaded files.
+- Python for backend development and data processing.
+- Streamlit for web application development.
+- Tesseract OCR and pytesseract for text extraction.
+- Natural Language Processing techniques for text analysis.
+- Machine Learning and rule-based algorithms for classification.
+- Git and GitHub for version control.
+- Streamlit Cloud for application deployment.
 
-## 📦 Local Installation
+## Deployment
 
-1.  **Clone the repository**:
-    ```bash
-    git clone https://github.com/yourusername/smartmed-ai.git
-    cd smartmed-ai
-    ```
+- The application is deployed on Streamlit Cloud.
+- The system is publicly accessible without authentication.
+- Continuous deployment is managed through GitHub integration.
+- Live application URL:
+  https://smartmed-ai-birurajuvenkat.streamlit.app/
 
-2.  **Install Python Dependencies**:
-    ```bash
-    pip install -r requirements.txt
-    ```
+## Data Privacy and Security
 
-3.  **Install Tesseract OCR**:
-    *   **Windows**: [Download installer](https://github.com/UB-Mannheim/tesseract/wiki) and add to PATH.
-    *   **Linux (Ubuntu/Debian)**: `sudo apt-get install tesseract-ocr`
-    *   **Mac**: `brew install tesseract`
+- Uploaded documents are stored temporarily during processing.
+- Files are automatically deleted after analysis.
+- No personal or medical records are permanently stored.
+- Feedback is collected anonymously.
+- The system follows basic privacy and ethical guidelines.
 
-4.  **Run the App**:
-    ```bash
-    streamlit run app.py
-    ```
+## Limitations
 
-## 📝 Disclaimer
+- The application does not replace professional medical consultation.
+- Accuracy depends on document quality and OCR performance.
+- Some complex or poorly scanned reports may not be processed correctly.
+- Reference ranges may differ across laboratories.
 
-*   **Not a Medical Device**: This application is for informational purposes only. Always consult a qualified healthcare provider for medical advice, diagnosis, or treatment.
-*   **Data Privacy**: Uploaded files are processed in-memory or temporarily stored and can be deleted by the user. On ephemeral deployments (like Streamlit Cloud), files are wiped on restart.
+## Future Enhancements
 
----
-SmartMed AI © 2026
+- Integration with external databases for persistent storage.
+- Advanced deep learning-based NLP models.
+- Admin dashboard for system monitoring.
+- Mobile application development.
+- Cloud-based analytics and reporting.
+- Research-level validation and optimization.
