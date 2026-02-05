@@ -12,12 +12,30 @@ from modules.validator import validate_medical_report
 from utils.file_handler import save_uploaded_file, delete_file
 
 # --- Application Setup ---
-app = Flask(__name__)
-CORS(app)  # Enable Cross-Origin Resource Sharing for React/Frontend
+import re
 
-# Configure Logging
+# --- Application Setup ---
+app = Flask(__name__)
+
+# Configure Logging (including CORS)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.getLogger('flask_cors').level = logging.DEBUG
 logger = logging.getLogger(__name__)
+
+# Strict CORS Configuration
+CORS(app,
+     resources={r"/*": {
+         "origins": [
+             "https://smartmed-ai-web.vercel.app",
+             "http://localhost:5173",
+             "http://127.0.0.1:5173",
+             re.compile(r"^https://.*\.vercel\.app$") # Wildcard for Vercel previews
+         ]
+     }},
+     supports_credentials=True,
+     allow_headers=["Content-Type", "Authorization"],
+     methods=["GET", "POST", "OPTIONS"]
+)
 
 # Constants
 UPLOAD_FOLDER = "uploads"
