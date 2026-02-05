@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://127.0.0.1:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000';
 
 const api = axios.create({
     baseURL: API_URL,
@@ -45,7 +45,4 @@ export const analyzeReport = async (file, language) => {
     }
 };
 
-export const submitFeedback = async (helpful, comment) => {
-    const response = await api.post('/feedback', { helpful, comment });
-    return response.data;
-};
+

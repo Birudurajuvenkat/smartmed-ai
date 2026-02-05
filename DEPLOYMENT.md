@@ -1,50 +1,87 @@
-# Deployment Guide for SmartMed AI
+# 🚀 Deployment Guide: SmartMed AI
 
-This guide covers how to deploy the **SmartMed AI** application to **Streamlit Cloud** and **Docker** platforms.
+This guide covers how to deploy the **Flask Backend** (with Tesseract OCR) and the **React Frontend** to the cloud.
 
-## Prerequisites
+---
 
-Ensure all files are committed to a GitHub repository.
+## 🏗️ 1. Backend Deployment (Render)
 
-## Option 1: Streamlit Cloud (Recommended)
+We use **Docker** to easily install Tesseract OCR and Python dependencies.
 
-Streamlit Cloud is the easiest way to deploy Streamlit apps.
+1.  **Push your code to GitHub/GitLab.**
+2.  **Sign up/Login to [Render.com](https://render.com).**
+3.  Click **"New +"** → **"Web Service"**.
+4.  Connect your repository.
+5.  **Configuration:**
+    *   **Runtime:** `Docker` (Render detects the `Dockerfile` automatically).
+    *   **Region:** Choose closest to you (e.g., Singapore, Frankfurt, Oregon).
+    *   **Env Variables:**
+        *   `FLASK_ENV`: `production`
+        *   `PORT`: `5000`
+6.  Click **"Create Web Service"**.
+7.  Wait for the build to finish. Render will give you a public URL (e.g., `https://smartmed-backend.onrender.com`).
+    *   *Copy this URL, you need it for the frontend.*
 
-1.  **Push your code to GitHub.**
-2.  Login to [Streamlit Cloud](https://streamlit.io/cloud).
-3.  Click **"New app"**.
-4.  Select your repository, branch, and set the main file path to `app.py`.
-5.  **Advanced Settings**:
-    *   Streamlit Cloud automatically detects `requirements.txt` and installs Python dependencies.
-    *   It also detects `packages.txt` and installs system dependencies (we have already included `tesseract-ocr` in this file).
-6.  Click **"Deploy!"**.
+---
 
-**Note on Persistence**: The `user_feedback.csv` file will store feedback only temporarily in the current session's container. If the app restarts, this data may be lost. For production persistence, consider using a database or Google Sheets.
+## 🎨 2. Frontend Deployment (Vercel)
 
-## Option 2: Docker / Container Deployment
+1.  **Sign up/Login to [Vercel.com](https://vercel.com).**
+2.  Click **"Add New..."** → **"Project"**.
+3.  Import your repository.
+4.  **Project Settings:**
+    *   **Framework Preset:** Vite (Should be auto-detected).
+    *   **Root Directory:** Click "Edit" and select `frontend`.
+5.  **Environment Variables:**
+    *   Add a new variable:
+        *   **Name:** `VITE_API_URL`
+        *   **Value:** Your backend URL from Step 1 (e.g., `https://smartmed-backend.onrender.com`).
+          *   *Note: Do NOT add a trailing slash `/`.*
+6.  Click **"Deploy"**.
+7.  Vercel will build your site and give you a live domain (e.g., `https://smartmed-ai.vercel.app`).
 
-If you want to deploy to platforms like **Fly.io**, **Google Cloud Run**, or **Hugging Face Spaces**, you can use the included `Dockerfile`.
+---
 
-### Build the Image
-```bash
-docker build -t smartmed-ai .
-```
+## 🧪 3. Verification
 
-### Run the Container
-```bash
-docker run -p 8501:8501 smartmed-ai
-```
+1.  Open your Vercel URL.
+2.  The app should load with the particle background.
+3.  Open Developer Tools (F12) → Console.
+4.  **Check Health:** If you see no red connection errors, the frontend successfully contacted the backend.
+5.  **Try it:** Upload a sample medical PDF.
 
-Access the app at `http://localhost:8501`.
+---
 
-## Option 3: Hugging Face Spaces
+## 🛠️ Troubleshooting
 
-1.  Create a new Space on [Hugging Face](https://huggingface.co/spaces).
-2.  Select **Docker** as the SDK.
-3.  Upload your files (including the `Dockerfile`) to the Space.
-4.  It will build and run automatically.
+### ❌ "Server is unavailable"
+*   **Check Vercel Env Var:** Did you set `VITE_API_URL` correctly? Did you rebuild/redeploy after setting it?
+*   **Check Render Logs:** Go to Render Dashboard → Logs. Is the backend crashing? Is Tesseract installed? (Our Dockerfile handles this).
+*   **CORS Issues:** Access the Backend URL directly in a browser (`/health`). If it loads, the backend is up.
 
-## Troubleshooting
+### ❌ "Invalid medical report" on valid files
+*   **OCR Issues:** Ensure the image contains readable text.
+*   **Language:** The current OCR is optimized for English (`tesseract-ocr-eng`). Support for other languages requires updating the Dockerfile.
 
-*   **OCR Errors**: If you see errors related to Tesseract not being found, ensure `packages.txt` (Streamlit Cloud) or the `apt-get install tesseract-ocr` command (Docker) was executed successfully.
-*   **Memory Issues**: OCR and detailed logging can consume memory. If the app crashes, consider resizing images before processing.
+---
+
+## 💻 Local Development
+
+To run everything locally:
+
+1.  **Backend:**
+    ```bash
+    pip install -r requirements.txt
+    python app.py
+    ```
+2.  **Frontend:**
+    ```bash
+    cd frontend
+    npm install
+    npm run dev
+    ```
+3.  **Env:**
+    *   Ensure `frontend/.env` has `VITE_API_URL=http://127.0.0.1:5000`.
+
+---
+*Created by SmartMed DevOps Team*

@@ -6,9 +6,28 @@ import logging
 # Configure logger for this module
 logger = logging.getLogger(__name__)
 
-# Explicitly set Tesseract path for Windows
-# This fixes the "Tesseract not found" error
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+import shutil
+
+# Cross-platform Tesseract Configuration
+# Priority:
+# 1. Environment variable TESSERACT_CMD
+# 2. System PATH (works for Linux/Render and correctly installed Windows)
+# 3. Fallback hardcoded Windows path
+
+tesseract_cmd = os.environ.get("TESSERACT_CMD")
+if not tesseract_cmd:
+    tesseract_cmd = shutil.which("tesseract")
+    
+if not tesseract_cmd and os.name == 'nt':
+    # Common default installation path on Windows
+    possible_path = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    if os.path.exists(possible_path):
+        tesseract_cmd = possible_path
+
+if tesseract_cmd:
+    pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+else:
+    logger.warning("Tesseract binary not found in PATH or standard locations. OCR may fail.")
 
 def extract_text_from_image(image_path):
     """

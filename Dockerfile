@@ -1,25 +1,27 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 # Set the working directory
 WORKDIR /app
 
-# Install system dependencies
-# Tesseract OCR is required for the OCR module
+# Install system dependencies (Tesseract OCR is critical)
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
-    libtesseract-dev \
-    gcc \
+    tesseract-ocr-eng \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy requirements first to leverage Docker cache
+COPY requirements.txt .
 
-# Install any needed packages specified in requirements.txt
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the port Streamlit runs on
-EXPOSE 8501
+# Copy the rest of the application
+COPY . .
 
-# Run the application
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Expose the Flask port
+EXPOSE 5000
+
+# Run the application with Gunicorn
+# Binds to 0.0.0.0 to allow external access
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app", "--timeout", "120"]

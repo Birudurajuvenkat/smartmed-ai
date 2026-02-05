@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ParticleBackground from './components/ParticleBackground';
-import { analyzeReport, submitFeedback } from './services/api';
+import { analyzeReport } from './services/api';
 import QuotesTicker from './components/QuotesTicker';
 import { useLanguage } from './context/LanguageContext';
 
@@ -11,7 +11,6 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
-  const [feedbackSent, setFeedbackSent] = useState(false);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -48,15 +47,6 @@ function App() {
     }
   };
 
-  const handleFeedback = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const helpful = formData.get('helpful');
-    const comment = formData.get('comment');
-
-    await submitFeedback(helpful, comment);
-    setFeedbackSent(true);
-  };
 
   const [dragActive, setDragActive] = useState(false);
 
@@ -180,8 +170,6 @@ function App() {
                 {t('analyzeBtn')}
               </button>
             )}
-
-            {error && <div style={{ color: 'var(--danger-color)', marginTop: '1rem', textAlign: 'center' }}>{error}</div>}
 
             {error && <div style={{ color: 'var(--danger-color)', marginTop: '1rem', textAlign: 'center' }}>{error}</div>}
 

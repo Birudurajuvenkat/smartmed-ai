@@ -10,7 +10,6 @@ from modules.recommender import get_recommendations
 from modules.translator import translate_text, LANGUAGES
 from modules.validator import validate_medical_report
 from utils.file_handler import save_uploaded_file, delete_file
-from utils.feedback_manager import save_feedback
 
 # --- Application Setup ---
 app = Flask(__name__)
@@ -143,4 +142,8 @@ def get_languages():
 if __name__ == '__main__':
     # Run Flask Server
     print("🚀 Starting SmartMed AI Backend...")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Use PORT env variable for deployment (e.g., Render/Heroku)
+    port = int(os.environ.get("PORT", 5000))
+    # Disable debug mode in production for security
+    debug_mode = os.environ.get("FLASK_ENV") != "production"
+    app.run(host='0.0.0.0', port=port, debug=debug_mode)
