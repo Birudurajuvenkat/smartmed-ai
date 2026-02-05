@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://smartmed-ai.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL ||
+    (import.meta.env.PROD
+        ? 'https://smartmed-ai.onrender.com'
+        : 'http://127.0.0.1:5000');
 
 const api = axios.create({
     baseURL: API_URL,
