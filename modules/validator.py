@@ -59,9 +59,16 @@ def validate_medical_report(text):
     # A typical report has at least one test (kw), some structure (result/range), and units.
     # A score of 15 allows for small/partial reports but filters out generic text.
     THRESHOLD = 15
+    
+    # CRITICAL CHECK: If almost no medical keywords are found, it's likely a resume or random doc.
+    if len(found_keywords) < 2:
+        logger.warning("Validation Failed: Too few medical keywords found.")
+        return False, total_score, {"error": "Not enough medical terms found."}
+
     is_valid = total_score >= THRESHOLD
     
-    logger.info(f"Validator Score: {total_score} (Threshold: {THRESHOLD}). Valid: {is_valid}")
+    logger.info(f"Validator Details -> Score: {total_score} (Threshold: {THRESHOLD}). Valid: {is_valid}")
+    logger.info(f"Breakdown -> Keywords: {len(found_keywords)} ({found_keywords}), Structure: {len(found_structure)}, Units: {found_units}")
     
     details = {
         "score": total_score,
