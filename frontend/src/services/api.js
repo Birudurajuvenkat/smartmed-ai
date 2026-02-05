@@ -32,11 +32,14 @@ export const analyzeReport = async (file, language, onProgress) => {
 
     for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
         try {
+            // Debug logging for FormData
+            for (let pair of formData.entries()) {
+                console.log('FormData:', pair[0], pair[1]);
+            }
+
             // Increase timeout for OCR processing
             const response = await api.post('/analyze', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+                // Do NOT manually set Content-Type. Let Axios and Browser set it with boundary.
                 timeout: 60000 // 60s
             });
             return response.data;
