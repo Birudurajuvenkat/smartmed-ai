@@ -11,6 +11,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [loadingMessage, setLoadingMessage] = useState('');
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -26,11 +27,14 @@ function App() {
 
     setLoading(true);
     setError('');
+    setLoadingMessage('Analyzing report, please wait...');
 
     try {
       // Find lang code for backend
       const langCode = getLanguageCode();
-      const data = await analyzeReport(file, langCode);
+      const data = await analyzeReport(file, langCode, (retryCount) => {
+        setLoadingMessage(`Server is waking up... (Attempt ${retryCount}/3)\nPlease wait ⏳`);
+      });
 
       if (data.error) {
         // Here we could try to map backend errors to frontend translations if key exists
@@ -44,6 +48,7 @@ function App() {
       setError(t('errServer'));
     } finally {
       setLoading(false);
+      setLoadingMessage('');
     }
   };
 
@@ -158,7 +163,7 @@ function App() {
             {loading && (
               <div style={{ textAlign: 'center', margin: '2rem 0' }}>
                 <div className="loader" style={{ margin: '0 auto' }}></div>
-                <p style={{ marginTop: '1rem', color: 'var(--text-secondary)' }}>Analyzing report, please wait...</p>
+                <p style={{ marginTop: '1rem', color: 'var(--text-secondary)', whiteSpace: 'pre-line' }}>{loadingMessage}</p>
               </div>
             )}
 

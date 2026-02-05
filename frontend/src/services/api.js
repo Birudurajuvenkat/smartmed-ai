@@ -19,31 +19,57 @@ export const getLanguages = async () => {
     }
 };
 
-export const analyzeReport = async (file, language) => {
+// Helper to sleep
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+export const analyzeReport = async (file, language, onProgress) => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('language', language);
 
-    try {
-        // Increase timeout for OCR processing
-        const response = await api.post('/analyze', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            timeout: 60000 // 60s
-        });
-        return response.data;
-    } catch (error) {
-        console.error("API Error (Analyze):", error);
-        if (error.response && error.response.data) {
-            // Backend returned an error response (e.g., 400 validation error)
-            // Return it so App.jsx can display the message
-            return error.response.data;
-        } else if (error.request) {
-            // Network error (server down)
-            return { error: "Server is unavailable. Please check if the backend is running." };
-        } else {
-            return { error: "An unexpected error occurred." };
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY = 8000; // 8 seconds
+
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+        try {
+            // Increase timeout for OCR processing
+            const response = await api.post('/analyze', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                timeout: 60000 // 60s
+            });
+            return response.data;
+
+        } catch (error) {
+            const isNetworkError = !error.response; // Network error or timeout
+            const isServerBusy = error.response && (error.response.status === 502 || error.response.status === 503 || error.response.status === 504);
+
+            // If we have retries left AND it's a retryable error
+            if ((isNetworkError || isServerBusy) && attempt < MAX_RETRIES) {
+                console.warn(`Attempt ${attempt + 1} failed. Retrying in ${RETRY_DELAY / 1000}s...`);
+
+                if (onProgress) {
+                    onProgress(attempt + 1);
+                }
+
+                await wait(RETRY_DELAY);
+                continue; // Retry loop
+            }
+
+            console.error("API Error (Analyze):", error);
+
+            // Final Error Handling
+            if (error.response && error.response.data) {
+                return error.response.data;
+            } else if (isNetworkError) {
+                return {
+                    error: "Server is still starting or unavailable. Please try again in a minute.",
+                    details: "Request timed out after multiple attempts."
+                };
+            } else {
+                return { error: "An unexpected error occurred." };
+            }
         }
     }
 };
