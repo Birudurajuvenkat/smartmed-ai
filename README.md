@@ -1,55 +1,66 @@
 # SmartMed AI – Multilingual Medical Report Analyzer
 
 ## Project Overview
+SmartMed AI is a full-stack web application designed to analyze medical laboratory reports and present easy-to-understand health insights for users. The system extracts data from PDF and image-based reports using OCR and NLP techniques, evaluates medical parameters, and provides recommendations based on standard reference ranges.
 
-- SmartMed AI is an AI-powered web application developed to analyze medical reports and generate simplified, patient-friendly summaries.
-- The system is designed to be free, easy to use, and accessible without user login.
-- It supports multiple languages including English, Telugu, Hindi, and Tamil.
-- The application focuses on improving healthcare awareness using artificial intelligence technologies.
-
+This project aims to make medical report interpretation accessible to non-technical users through a simple and multilingual interface
 ## Key Features
 
-- Supports upload of medical reports in PDF and image formats.
-- Uses Optical Character Recognition (OCR) with Tesseract to extract text from scanned documents.
-- Implements Natural Language Processing (NLP) for text preprocessing and medical entity extraction.
-- Automatically identifies medical parameters such as Hemoglobin, Blood Sugar, and Cholesterol.
-- Classifies health values into Low, Normal, and High categories using reference ranges.
-- Generates personalized diet and lifestyle recommendations.
-- Includes document validation to prevent non-medical and irrelevant file uploads.
-- Provides multilingual output through translation mechanisms.
-- Offers a clean and user-friendly web interface built with Streamlit.
-- Allows anonymous feedback submission without collecting personal data.
+Upload and analyze medical reports in PDF and image formats
+Optical Character Recognition (OCR) using Tesseract for scanned documents
+NLP-based extraction of medical parameters
+Automated classification of results as Low, Normal, or High
+Health and lifestyle recommendations based on analysis
+Multilingual support (English, Telugu, Hindi, Tamil)
+Responsive and user-friendly web interface
+Cloud deployment with frontend and backend separation
+Error handling and server wake-up retry mechanism
 
 ## System Workflow
 
-- User uploads a medical report through the web interface.
-- The system validates the uploaded file format and content.
-- OCR is applied to extract text from scanned documents.
-- Extracted text is cleaned and processed using NLP techniques.
-- Medical values and parameters are identified and structured.
-- Values are analyzed and compared with standard reference ranges.
-- Health status is classified into appropriate categories.
-- Recommendations are generated based on analysis.
-- Results are displayed in real time.
-- Uploaded files are deleted automatically after processing.
+User uploads a medical report through the web interface.
+The frontend sends the file to the backend using REST APIs.
+The backend processes the file using OCR and NLP pipelines.
+Extracted data is validated and analyzed against reference ranges.
+Health status and recommendations are generated.
+Results are returned to the frontend and displayed to the user.
 
 ## Technologies Used
 
-- Python for backend development and data processing.
-- Streamlit for web application development.
-- Tesseract OCR and pytesseract for text extraction.
-- Natural Language Processing techniques for text analysis.
-- Machine Learning and rule-based algorithms for classification.
-- Git and GitHub for version control.
-- Streamlit Cloud for application deployment.
+Frontend
+React.js
+HTML, CSS, JavaScript
+Backend
+Python
+Flask (REST API)
+Flask-CORS
+AI / Data Processing
+OCR (Tesseract)
+NLP (Natural Language Processing using Regular Expressions)
+Data Validation and Parsing
+Cloud & DevOps
+Vercel (Frontend Hosting)
+Render (Backend Hosting)
+Docker
+Environment Variables
+Tools
+Git, GitHub
+VS Code
+
+## Live Application
+https://smartmed-ai-web.vercel.app/
 
 ## Deployment
 
-- The application is deployed on Streamlit Cloud.
-- The system is publicly accessible without authentication.
-- Continuous deployment is managed through GitHub integration.
-- Live application URL:
-  https://smartmed-ai-birurajuvenkat.streamlit.app/
+Backend
+
+Deployed on Render using Docker
+
+Frontend
+
+Deployed on Vercel with automatic CI/CD from GitHub
+
+Every push to the main branch triggers automatic redeployment.
 
 ## Data Privacy and Security
 
@@ -67,10 +78,12 @@
 - Reference ranges may differ across laboratories.
 
 ## Future Enhancements
+Integration of machine learning models for health risk prediction
 
-- Integration with external databases for persistent storage.
-- Advanced deep learning-based NLP models.
-- Admin dashboard for system monitoring.
-- Mobile application development.
-- Cloud-based analytics and reporting.
-- Research-level validation and optimization.
+User profile and report history
+
+Mobile application support
+
+Advanced medical analytics
+
+Secure database integration
